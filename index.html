@@ -1,0 +1,70 @@
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <title>File Browser</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.9/vue.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/vue-router/3.0.2/vue-router.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+        <link rel="stylesheet" href="/_app/site.css">
+    </head>
+    <body>
+        <div id="app">
+            <header>
+                <h1>{{loading ? 'Loading...' : name}}</h1>
+            </header>
+            <main v-if="loading" class="loading">
+                <div class="lds-dual-ring"></div> Loading...
+            </main>
+            <main v-else>
+                <section class="directories">
+                    <h2>Directories</h2>
+                    <ul>
+                        <li v-if="parent">
+                            <router-link :to="parent">
+                                <img src="/_app/images/folder_arrow.png" alt="icon" />
+                                Parent directory
+                            </router-link>
+                        </li>
+                        <li v-for="d in directories">
+                            <router-link :to="d.path">
+                                <img src="/_app/images/folder.png" alt="icon" />
+                                {{d.name}}
+                            </router-link>
+                        </li>
+                    </ul>
+                </section>
+                <article class="files">
+                    <div v-if="readme" v-html="readme" class="readme"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>File</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="f in files">
+                                <td>
+                                    <a :href="f.path">
+                                        <img :src="'/_app/images/' + icon(f) + '.png'" alt="icon" />
+                                        {{f.name}}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{size(f)}}
+                                </td>
+                            </tr>
+                            <tr v-if="!files.length">
+                                <td colspan="2">No files</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </article>
+            </main>
+            <footer>
+                &copy; All files copyright their original creators.
+            </footer>
+        </div>
+        <script src="/_app/site.js"></script>
+    </body>
+</html>
